@@ -108,13 +108,14 @@ export default function AdminMenuPage() {
     fetchAll()
   }
 
-  async function deleteCat(id: string) {
-    if (!confirm('ลบหมวดหมู่นี้? เมนูในหมวดนี้จะไม่มีหมวดหมู่')) return
-    const supabase = createClient()
-    await supabase.from('menu_categories').delete().eq('id', id)
-    toast.success('ลบหมวดหมู่แล้ว')
-    fetchAll()
-  }
+ async function deleteCat(id: string) {
+  if (!confirm('ลบหมวดหมู่นี้? เมนูในหมวดนี้จะไม่มีหมวดหมู่')) return
+  const supabase = createClient()
+  const { error } = await supabase.from('menu_categories').delete().eq('id', id)
+  if (error) { toast.error('ลบไม่สำเร็จ: ' + error.message); return }
+  toast.success('ลบหมวดหมู่แล้ว')
+  setCategories(prev => prev.filter(c => c.id !== id))
+}
 
   // ---- Menu Item CRUD ----
   function openAddItem(categoryId?: string) {
@@ -161,10 +162,11 @@ export default function AdminMenuPage() {
 
   async function deleteItem(id: string) {
     if (!confirm('ลบเมนูนี้?')) return
-    const supabase = createClient()
-    await supabase.from('menu_items').delete().eq('id', id)
-    toast.success('ลบเมนูแล้ว')
-    fetchAll()
+      const supabase = createClient()
+      const { error } = await supabase.from('menu_items').delete().eq('id', id)
+    if (error) { toast.error('ลบไม่สำเร็จ: ' + error.message); return }
+      toast.success('ลบเมนูแล้ว')
+      setItems(prev => prev.filter(i => i.id !== id))
   }
 
   async function toggleAvailable(item: MenuItem) {
