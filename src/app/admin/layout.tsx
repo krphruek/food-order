@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto px-4 py-6">{children}</main>
+        <main className="flex-1 px-4 py-6 pb-24 md:pb-6 overflow-auto">{children}</main>
       </div>
 
       {/* Bottom Nav (mobile) */}
